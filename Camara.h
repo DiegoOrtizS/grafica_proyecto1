@@ -44,8 +44,9 @@ public:
         xe.normalize();
         ye = ze.cruz(xe);
     }
+
     void renderizar() ;
-    void renderizar(vector<Objeto*> &objetos, vector<Luz*> &luces);
+    void renderizar(vector<Objeto*> &objetos, vector<Luz*> &luces, vector<Esfera*> &Esferas);
 
     vec3 calcularColor(Rayo rayo, vector<Objeto*> &objetos, vector<Luz*> &luces, int prof);
     vec3 refract(vec3 I, vec3 N, float ior);
