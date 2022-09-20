@@ -1,5 +1,5 @@
 CPP = g++
-CPPFLAGS = -I /opt/X11/include -L /opt/X11/lib -lX11 -ljpeg -lpng -lz -pthread
+CPPFLAGS = -I /opt/X11/include -L /opt/X11/lib -lX11 -ljpeg -lpng -lz -pthread -fopenmp
 
 all: main.o camara.o cimg.o luz.o mundo.o objeto.o rayo.o vector.o
 	$(CPP) main.o camara.o cimg.o luz.o mundo.o objeto.o rayo.o vector.o $(CPPFLAGS)

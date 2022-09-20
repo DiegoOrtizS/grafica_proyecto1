@@ -3,6 +3,8 @@
 //
 
 #include "Camara.h"
+#include <omp.h>
+#include <iostream>
 
 void Camara::renderizar(){
     pImg = new CImg<BYTE>(w, h, 1, 10);
@@ -54,17 +56,20 @@ for (int x=0; x < w; x++){
 void Camara::renderizar(vector<Objeto*> &objetos, vector<Luz*> &luces) {
     pImg = new CImg<BYTE>(w, h, 1, 3);
     CImgDisplay dis_img((*pImg), "Imagen RayCasting en Perspectiva ");
-    vec3 color;
-    Rayo rayo;
-    rayo.ori = eye;
     float t_tmp, t;
     Objeto *pObj;
     Luz luz = *(luces[0]);
     vec3 normal, N, L;
     bool hay_interseccion;
     // Para cada pixel lanzar un rayo
-    for (int x=0; x < w; x++){
+    int w_aux = w;
+    #pragma omp parallel for
+    for (int x=0; x < w_aux; x++){
+        // std::cout << omp_get_num_threads() << "\n";
         for (int y=0; y < h; y++){
+            Rayo rayo;
+            vec3 color;
+            rayo.ori = eye;
             rayo.dir = -f*ze + a*(y/h -0.5)*ye + b*(x/w-0.5)*xe;
             rayo.dir.normalize();
             if (x == 420 and y== h-222){
