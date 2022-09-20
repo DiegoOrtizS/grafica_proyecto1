@@ -54,7 +54,7 @@ for (int x=0; x < w; x++){
     }
 }
 
-void Camara::renderizar(vector<Objeto*> &objetos, vector<Luz*> &luces) {
+void Camara::renderizar(vector<Objeto*> &objetos, vector<Luz*> &luces, vector<Esfera*> &Esferas) {
     int FPS = 24, seconds = 30, frames = FPS*seconds;
     vector<float> center_y = {-10.        ,  -9.97218359,  -9.94436718,  -9.91655076,
         -9.88873435,  -9.86091794,  -9.83310153,  -9.80528512,
@@ -246,8 +246,29 @@ void Camara::renderizar(vector<Objeto*> &objetos, vector<Luz*> &luces) {
     bool hay_interseccion;
     // Para cada pixel lanzar un rayo
     int w_aux = w;
+    srand(time(NULL));
     for (int frame = 1; frame <= frames; frame++) {
         center.y = center_y[frame-1];
+        for (auto &esf:Esferas)
+        {
+            int temp1,temp2,x1,x2,x3;
+            do{
+                temp1 = (rand()%2==0) ? 1:-1;
+                x2 = esf->cen.y + temp1;
+            }while(x2<1.1 or x2>14.9);
+            do{
+                temp1 = (rand()%2==0) ? 1:-1;
+                temp2 = (rand()%2==0) ? 1:-1;
+                x1 = esf->cen.x + temp1;
+                x3 = esf->cen.z + temp2;
+            }while(9<sqrt(x1*x1+x3*x3));
+            esf->cen = vec3(x1,x2,x3);
+        }
+        
+        // Esferas[0]->cen =  vec3(Esferas[0]->cen.x + 1,Esferas[0]->cen.y +1,Esferas[0]->cen.z +1);
+        // Esferas[1]->cen =  vec3(Esferas[1]->cen.x -2,Esferas[1]->cen.y +2,Esferas[1]->cen.z -2);
+        // Esferas[0]->cen =  vec3(Esferas[0]->cen.x + (rand() > RAND_MAX/2) ? 1 : -1,Esferas[0]->cen.y +(rand() > RAND_MAX/2) ? 1 : -1,Esferas[0]->cen.z +(rand() > RAND_MAX/2) ? 1 : -1);
+        // Esferas[1]->cen =  vec3(Esferas[1]->cen.x + (rand() > RAND_MAX/2) ? 1 : -1,Esferas[1]->cen.y +(rand() > RAND_MAX/2) ? 1 : -1,Esferas[1]->cen.z +(rand() > RAND_MAX/2) ? 1 : -1);
         inicializar();
         #pragma omp parallel for
         for (int x=0; x < w_aux; x++){
@@ -271,13 +292,14 @@ void Camara::renderizar(vector<Objeto*> &objetos, vector<Luz*> &luces) {
             dis_img.render((*pImg));
             dis_img.paint();
         }
-        string name = "frames/frame_"+std::to_string(frame)+".png";
+        string name = "frames/frame_"+std::to_string(frame)+".bmp";
         cout << name << endl;
         pImg->save(name.c_str());
-    }
-    while (!dis_img.is_closed()) {
+        while (!dis_img.is_closed()) {
         dis_img.wait();
     }
+    }
+
 }
 
 vec3 Camara::calcularColor(Rayo rayo, vector<Objeto*> &objetos, vector<Luz*> &luces, int prof){

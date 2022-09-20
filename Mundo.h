@@ -15,6 +15,7 @@ class Mundo {
 public:
     vector<Objeto*> objetos;
     vector<Luz*> luces;
+    vector<Esfera*> esferas;
     Camara camara;
 
     void Escenario1();
