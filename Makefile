@@ -33,3 +33,6 @@ luciernaga.o: Luciernaga.h Luciernaga.cpp
 
 clean:
 	rm *.o a.out
+
+rm_frames:
+	rm frames/*
